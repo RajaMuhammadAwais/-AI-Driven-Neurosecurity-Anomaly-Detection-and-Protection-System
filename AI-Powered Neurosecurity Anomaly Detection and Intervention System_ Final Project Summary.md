@@ -1,6 +1,6 @@
 # AI-Powered Neurosecurity Anomaly Detection and Intervention System: Final Project Summary
 
-**Author:** Manus AI  
+**Author:** Raja Muhammad Awais  
 **Date:** July 2025  
 **Version:** 1.0
 
