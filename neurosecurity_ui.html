@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neurosecurity System - Control Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: #27ae60;
+            box-shadow: 0 0 10px rgba(39, 174, 96, 0.5);
+        }
+
+        .status-warning {
+            background: #f39c12;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
+        }
+
+        .status-inactive {
+            background: #95a5a6;
+        }
+
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .consent-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .consent-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .consent-item:last-child {
+            border-bottom: none;
+        }
+
+        .consent-description {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .consent-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .consent-detail {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 Neurosecurity Control Panel</h1>
+            <p>AI-Powered Anomaly Detection and Intervention System</p>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h3>
+                    <span class="status-indicator status-active"></span>
+                    System Status
+                </h3>
+                <div class="metric">
+                    <span>Anomaly Detection Engine</span>
+                    <span class="metric-value" id="ade-status">Active</span>
+                </div>
+                <div class="metric">
+                    <span>Privacy Layer</span>
+                    <span class="metric-value" id="privacy-status">Enabled</span>
+                </div>
+                <div class="metric">
+                    <span>Intervention System</span>
+                    <span class="metric-value" id="intervention-status">Ready</span>
+                </div>
+                <div class="metric">
+                    <span>Last Health Check</span>
+                    <span class="metric-value" id="last-check">2 minutes ago</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>
+                    <span class="status-indicator status-active"></span>
+                    Real-time Metrics
+                </h3>
+                <div class="metric">
+                    <span>Neurodata Streams</span>
+                    <span class="metric-value" id="stream-count">8 channels</span>
+                </div>
+                <div class="metric">
+                    <span>Processing Latency</span>
+                    <span class="metric-value" id="latency">12ms</span>
+                </div>
+                <div class="metric">
+                    <span>Anomalies Detected (24h)</span>
+                    <span class="metric-value" id="anomaly-count">3</span>
+                </div>
+                <div class="metric">
+                    <span>Confidence Score</span>
+                    <span class="metric-value" id="confidence">94.2%</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>
+                    <span class="status-indicator status-warning"></span>
+                    Recent Alerts
+                </h3>
+                <div class="alert show">
+                    <strong>Low Priority:</strong> Unusual pattern detected in channel 3 at 14:23. Confidence: 72%
+                </div>
+                <div style="margin-top: 15px;">
+                    <button class="btn" onclick="viewAllAlerts()">View All Alerts</button>
+                    <button class="btn btn-success" onclick="acknowledgeAlerts()">Acknowledge</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>
+                    <span class="status-indicator status-active"></span>
+                    Quick Actions
+                </h3>
+                <div style="margin: 15px 0;">
+                    <button class="btn" onclick="runDiagnostics()">Run Diagnostics</button>
+                    <button class="btn btn-danger" onclick="emergencyStop()">Emergency Stop</button>
+                </div>
+                <div style="margin: 15px 0;">
+                    <button class="btn" onclick="exportLogs()">Export Logs</button>
+                    <button class="btn" onclick="updateModels()">Update Models</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="consent-section">
+            <h3 style="margin-bottom: 20px; color: #2c3e50;">Privacy & Consent Management</h3>
+            
+            <div class="consent-item">
+                <div class="consent-description">
+                    <div class="consent-title">Anomaly Detection</div>
+                    <div class="consent-detail">Allow AI models to analyze your neurodata for security threats</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked id="consent-anomaly">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="consent-item">
+                <div class="consent-description">
+                    <div class="consent-title">Data Obfuscation</div>
+                    <div class="consent-detail">Automatically obfuscate neurodata when threats are detected</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked id="consent-obfuscation">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="consent-item">
+                <div class="consent-description">
+                    <div class="consent-title">Signal Intervention</div>
+                    <div class="consent-detail">Allow non-invasive signal disruption for threat mitigation</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="consent-intervention">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="consent-item">
+                <div class="consent-description">
+                    <div class="consent-title">Federated Learning</div>
+                    <div class="consent-detail">Contribute anonymized model updates to improve global security</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" checked id="consent-federated">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="consent-item">
+                <div class="consent-description">
+                    <div class="consent-title">Research Participation</div>
+                    <div class="consent-detail">Allow anonymized data to be used for neurosecurity research</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="consent-research">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn btn-success" onclick="saveConsent()">Save Consent Preferences</button>
+                <button class="btn" onclick="exportConsent()">Export Consent Record</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time updates
+        function updateMetrics() {
+            const latency = Math.floor(Math.random() * 20) + 10;
+            const confidence = (Math.random() * 10 + 90).toFixed(1);
+            
+            document.getElementById('latency').textContent = latency + 'ms';
+            document.getElementById('confidence').textContent = confidence + '%';
+            
+            // Update last check time
+            document.getElementById('last-check').textContent = 'Just now';
+        }
+
+        // Update metrics every 5 seconds
+        setInterval(updateMetrics, 5000);
+
+        // Button functions
+        function viewAllAlerts() {
+            alert('Opening detailed alert history...');
+        }
+
+        function acknowledgeAlerts() {
+            const alertDiv = document.querySelector('.alert.show');
+            if (alertDiv) {
+                alertDiv.style.display = 'none';
+            }
+            showNotification('Alerts acknowledged successfully');
+        }
+
+        function runDiagnostics() {
+            showNotification('Running system diagnostics...');
+            setTimeout(() => {
+                showNotification('Diagnostics completed. All systems operational.');
+            }, 2000);
+        }
+
+        function emergencyStop() {
+            if (confirm('Are you sure you want to initiate emergency stop? This will halt all neurosecurity operations.')) {
+                document.getElementById('ade-status').textContent = 'Stopped';
+                document.getElementById('intervention-status').textContent = 'Disabled';
+                showNotification('Emergency stop activated. System halted.', 'danger');
+            }
+        }
+
+        function exportLogs() {
+            showNotification('Preparing log export...');
+        }
+
+        function updateModels() {
+            showNotification('Checking for model updates...');
+        }
+
+        function saveConsent() {
+            const consents = {
+                anomaly: document.getElementById('consent-anomaly').checked,
+                obfuscation: document.getElementById('consent-obfuscation').checked,
+                intervention: document.getElementById('consent-intervention').checked,
+                federated: document.getElementById('consent-federated').checked,
+                research: document.getElementById('consent-research').checked
+            };
+            
+            console.log('Consent preferences saved:', consents);
+            showNotification('Consent preferences saved successfully');
+        }
+
+        function exportConsent() {
+            showNotification('Generating consent record export...');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = 'alert show';
+            notification.textContent = message;
+            
+            if (type === 'danger') {
+                notification.style.background = '#f8d7da';
+                notification.style.borderColor = '#f5c6cb';
+                notification.style.color = '#721c24';
+            }
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Neurosecurity Control Panel initialized');
+        });
+    </script>
+</body>
+</html>
+

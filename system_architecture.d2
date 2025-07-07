@@ -1,0 +1,64 @@
+direction: right
+
+Neurodata Acquisition Module: {
+  shape: cloud
+  Neurodata_Streams
+}
+
+Real-time Processing and Feature Extraction Module: {
+  shape: rectangle
+  Feature_Extraction
+}
+
+Anomaly Detection Engine (ADE): {
+  shape: cylinder
+  AI_ML_Models
+}
+
+Intervention Management Module (IMM): {
+  shape: rectangle
+  Intervention_Logic
+}
+
+Privacy-Preserving Analytics (PPA) Layer: {
+  shape: hexagon
+  Privacy_Techniques
+}
+
+User Interface (UI) and Alerting Module: {
+  shape: rectangle
+  User_Interaction
+}
+
+Ethical AI and Consent Management Module: {
+  shape: rectangle
+  Consent_Management
+}
+
+Secure Data Storage and Management: {
+  shape: cylinder
+  Data_Storage
+}
+
+System Orchestration and API Gateway: {
+  shape: rectangle
+  API_Management
+}
+
+Neurodata Acquisition Module -> Real-time Processing and Feature Extraction Module: Neurodata Streams
+Real-time Processing and Feature Extraction Module -> Anomaly Detection Engine (ADE): Processed Features
+Anomaly Detection Engine (ADE) -> Intervention Management Module (IMM): Anomaly Alerts
+Intervention Management Module (IMM) -> Neurodata Acquisition Module: Intervention Commands
+
+UI and Alerting Module -> Ethical AI and Consent Management Module: Consent Preferences
+UI and Alerting Module -> System Orchestration and API Gateway: User Commands
+System Orchestration and API Gateway -> Anomaly Detection Engine (ADE): Model Updates
+System Orchestration and API Gateway -> Intervention Management Module (IMM): Configuration
+
+Real-time Processing and Feature Extraction Module <-> PPA Layer: Privacy-Preserving Processing
+Anomaly Detection Engine (ADE) <-> PPA Layer: Privacy-Preserving Analysis
+Secure Data Storage and Management <-> PPA Layer: Secure Data Access
+
+All_Modules -> Secure Data Storage and Management: Logs & Historical Data
+
+
